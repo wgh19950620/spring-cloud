@@ -1104,32 +1104,86 @@
       <Charset>utf8mb4</Charset>
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
-    <table id="277" parent="2" name="t_user"/>
-    <column id="278" parent="277" name="id">
+    <table id="277" parent="2" name="t_grade"/>
+    <table id="278" parent="2" name="t_user"/>
+    <column id="279" parent="277" name="ID">
       <Position>1</Position>
-      <DataType>int(255)|0s</DataType>
+      <DataType>int(10)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="279" parent="277" name="name">
+    <column id="280" parent="277" name="USER_ID">
+      <Position>2</Position>
+      <DataType>int(10)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="281" parent="277" name="CLASS">
+      <Position>3</Position>
+      <DataType>varchar(64)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="282" parent="277" name="SUBJECT">
+      <Position>4</Position>
+      <DataType>varchar(64)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="283" parent="277" name="GRADE">
+      <Position>5</Position>
+      <DataType>mediumtext|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="284" parent="277" name="DUTY">
+      <Position>6</Position>
+      <DataType>varchar(64)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="285" parent="277" name="TEST_TIME">
+      <Position>7</Position>
+      <DataType>date|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="286" parent="277" name="FK_GRADE_ID">
+      <ColNames>USER_ID</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="287" parent="277" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>ID</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="288" parent="277" name="FK_GRADE_ID">
+      <ColNames>USER_ID</ColNames>
+      <RefSchemaName>demo</RefSchemaName>
+      <RefTableName>t_user</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="289" parent="278" name="ID">
+      <Position>1</Position>
+      <DataType>int(10)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="290" parent="278" name="NAME">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="280" parent="277" name="age">
+    <column id="291" parent="278" name="AGE">
       <Position>3</Position>
       <DataType>int(10)|0s</DataType>
+      <DefaultExpression>&apos;1&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="281" parent="277" name="cupSize">
+    <column id="292" parent="278" name="IDENTITY">
       <Position>4</Position>
       <DataType>varchar(10)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="282" parent="277" name="PRIMARY">
+    <key id="293" parent="278" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>id</ColNames>
+      <ColNames>ID</ColNames>
       <Primary>1</Primary>
     </key>
   </database-model>
