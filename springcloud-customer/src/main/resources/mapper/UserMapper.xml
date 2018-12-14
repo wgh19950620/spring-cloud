@@ -7,7 +7,7 @@
         <result column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="age" property="age"/>
-        <result column="cupSize" property="cupSize"/>
+        <result column="identity" property="identity"/>
     </resultMap>
 
     <select id="findUser" resultMap="userMap">

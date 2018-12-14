@@ -21,4 +21,35 @@ public interface UserMapper {
      * @return user
      */
     List<User> findUser();
+
+    /**
+     * query user by id
+     *
+     * @param id id
+     * @return user
+     */
+    User queryUserById(Integer id);
+
+    /**
+     * delete user by id
+     *
+     * @param id id
+     * @return code
+     */
+    int deleteUserById(Integer id);
+
+    /**
+     * sava user
+     *
+     * @param user user
+     */
+    void savaUser(User user);
+
+    /**
+     * find user by userBean
+     *
+     * @param user user
+     * @return user
+     */
+    User findUserByBean(User user);
 }

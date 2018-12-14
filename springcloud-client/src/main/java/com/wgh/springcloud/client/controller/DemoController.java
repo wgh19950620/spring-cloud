@@ -1,5 +1,6 @@
 package com.wgh.springcloud.client.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -17,6 +18,7 @@ import com.wgh.springcloud.commons.util.UrlUtil;
  * @author wangguanghui
  */
 @RestController
+@Api(description = "测试用例")
 public class DemoController {
 
     @Autowired

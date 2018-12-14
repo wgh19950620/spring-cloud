@@ -1,0 +1,21 @@
+CREATE TABLE demo.T_USER (
+  ID            INT(10)         NOT NULL AUTO_INCREMENT,
+  NAME          VARCHAR(255)    NULL,
+  AGE           INT(10)         NULL DEFAULT 1,
+  IDENTITY      VARCHAR(10)     NULL,
+
+  PRIMARY KEY (ID)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE demo.T_GRADE (
+  ID              INT(10)         NOT NULL AUTO_INCREMENT,
+  USER_ID         INT(10)         NULL,
+  CLASS           VARCHAR(64)     NULL,
+  SUBJECT         VARCHAR(64)     NULL,
+  GRADE           LONG            NULL,
+  DUTY            VARCHAR(64)     NULL,
+  TEST_TIME       DATE            NULL,
+
+  CONSTRAINT FK_GRADE_ID FOREIGN KEY (USER_ID) REFERENCES T_USER (ID),
+  PRIMARY KEY (ID)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

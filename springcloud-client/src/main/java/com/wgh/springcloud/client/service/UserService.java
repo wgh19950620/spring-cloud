@@ -22,4 +22,20 @@ public class UserService {
     public List<User> findUser() {
         return userMapper.findUser();
     }
+
+    public User queryUserById(Integer id) {
+        return userMapper.queryUserById(id);
+    }
+
+    public int deleteUserById(Integer id) {
+        return userMapper.deleteUserById(id);
+    }
+
+    public void saveUser(User user) {
+        userMapper.savaUser(user);
+    }
+
+    public User findUserByBean(User user) {
+        return userMapper.findUserByBean(user);
+    }
 }

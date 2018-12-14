@@ -1,5 +1,6 @@
 package com.wgh.springcloud.customer.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,7 @@ import com.wgh.springcloud.commons.domain.User;
  * @author wangguanghui
  */
 @RestController
+@Api(description = "用户模型")
 public class UserController {
 
     @Resource(name = "loadBalanced")
