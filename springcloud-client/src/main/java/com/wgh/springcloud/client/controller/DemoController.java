@@ -7,7 +7,11 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.net.URI;
 
 import com.wgh.springcloud.commons.util.UrlUtil;
@@ -57,6 +61,18 @@ public class DemoController {
         String url = "http://spring-cloud-customer/hello/" + name;
 
         return loadBalanced.getForObject(url, String.class);
+    }
+
+    @GetMapping("/redirectTwo")
+    public ModelAndView redirect() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:hello/loadBalanced");
+        return modelAndView;
+    }
+
+    @GetMapping("/redirect")
+    public void handleFoo(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/query/user");
     }
 
 }
