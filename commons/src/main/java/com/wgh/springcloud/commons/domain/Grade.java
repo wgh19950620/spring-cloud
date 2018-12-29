@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,9 @@ import java.util.Date;
  */
 @Data
 @ApiModel
-public class Grade {
+public class Grade implements Serializable {
+
+    private static final long serialVersionUID = -3946734305303957850L;
 
     @ApiModelProperty(value = "班级id")
     private Integer id;

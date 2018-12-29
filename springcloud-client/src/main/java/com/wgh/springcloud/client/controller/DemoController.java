@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 
+import com.wgh.springcloud.client.configuration.FeignCustomerConfiguration;
 import com.wgh.springcloud.commons.util.UrlUtil;
 
 /**
@@ -39,6 +40,9 @@ public class DemoController {
     @Autowired
     private UrlUtil urlUtil;
 
+    @Autowired
+    private FeignCustomerConfiguration feignCustomerConfiguration;
+
     @GetMapping("/dc")
     public String dc() {
         String services = "services：" + discoveryClient.getServices();
@@ -61,6 +65,12 @@ public class DemoController {
         String url = "http://spring-cloud-customer/hello/" + name;
 
         return loadBalanced.getForObject(url, String.class);
+    }
+
+    @GetMapping("/hello/feign")
+    public String hello() {
+        String name = "祝国龙";
+        return feignCustomerConfiguration.index(name);
     }
 
     @GetMapping("/redirectTwo")

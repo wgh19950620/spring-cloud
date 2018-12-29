@@ -9,7 +9,7 @@ import java.util.Date;
  *
  * @author wangguanghui
  */
-public class DateUtil {
+public final class DateUtil {
 
     /**
      * 根据格式获取当前格式化时间
@@ -17,7 +17,7 @@ public class DateUtil {
      * @param format 格式化方式，基础格式为yyyy-MM-dd HH:mm:ss
      * @return 当前时间
      */
-    public static String getCurrentTimeByFormat(String format, Date date) {
+    private static String getCurrentTimeByFormat(String format, Date date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         return simpleDateFormat.format(date);
     }
@@ -29,7 +29,7 @@ public class DateUtil {
      * @param time   1527320060036L
      * @return
      */
-    public static String formatTime(String format, long time) {
+    private static String formatTime(String format, long time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         return simpleDateFormat.format(new Date(time));
     }
@@ -40,7 +40,7 @@ public class DateUtil {
      * @return          Date 类型时间，转化后保存时分秒
      * @throws Exception
      */
-    public static Date stringToDate(String strTime) throws Exception{
+    private static Date stringToDate(String strTime) throws Exception{
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         date = formatter.parse(strTime);

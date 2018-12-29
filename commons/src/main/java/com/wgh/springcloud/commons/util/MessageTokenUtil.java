@@ -21,13 +21,13 @@ import com.google.gson.Gson;
 import com.wgh.springcloud.commons.domain.MessageMetaInfo;
 
 /**
- * 消息中台接口调用token加密
+ * encode util
  *
  * @author wangguanghui
  * @version 1.0
  * @rule token=appId:hmac-sha1(appSecret,urlsafe-base64(meta)):urlsafe-base64(meta)
  */
-public class MessageTokenUtil {
+public final class MessageTokenUtil {
 
     private static       Logger logger   = LoggerFactory.getLogger(MessageTokenUtil.class);
     private static final String MAC_NAME = "HmacSHA1";

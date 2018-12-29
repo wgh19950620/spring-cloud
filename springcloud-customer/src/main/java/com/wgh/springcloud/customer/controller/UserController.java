@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.wgh.springcloud.commons.domain.User;
+import com.wgh.springcloud.customer.configuration.FeignClientConfig;
 
 /**
  * user controller
@@ -30,6 +32,9 @@ public class UserController {
 
     @Resource(name = "loadBalanced")
     private RestTemplate loadBalanced;
+
+    @Autowired
+    private FeignClientConfig feignClientConfig;
 
     @ApiOperation(value = "query user springcloud test", notes = "query user springcloud test")
     @ApiImplicitParams({
@@ -58,6 +63,16 @@ public class UserController {
         });
 
         return userList;
+    }
+
+    @GetMapping("/query/user/feign")
+    public User queryByFeign() {
+        return feignClientConfig.queryUserById(1);
+    }
+
+    @GetMapping("/query/user")
+    public User queryUser() {
+        return feignClientConfig.queryUser();
     }
 
 }
