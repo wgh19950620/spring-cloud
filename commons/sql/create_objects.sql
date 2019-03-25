@@ -1,13 +1,14 @@
-CREATE TABLE demo.T_USER (
+CREATE TABLE T_USER (
   ID            INT(10)         NOT NULL AUTO_INCREMENT,
   NAME          VARCHAR(255)    NULL,
   AGE           INT(10)         NULL DEFAULT 1,
   IDENTITY      VARCHAR(10)     NULL,
+  CUPSIZE       VARCHAR(10)     NULL,
 
   PRIMARY KEY (ID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE demo.T_GRADE (
+CREATE TABLE T_GRADE (
   ID              INT(10)         NOT NULL AUTO_INCREMENT,
   USER_ID         INT(10)         NULL,
   CLASS           VARCHAR(64)     NULL,

@@ -1,2 +1,2 @@
-DROP TABLE demo.t_user;
-DROP TABLE demo.t_grade;
+DROP TABLE t_user;
+DROP TABLE t_grade;

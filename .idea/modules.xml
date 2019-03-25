@@ -7,6 +7,9 @@
       <module fileurl="file://$PROJECT_DIR$/springcloud-customer/customer.iml" filepath="$PROJECT_DIR$/springcloud-customer/customer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/spring-cloud.iml" filepath="$PROJECT_DIR$/.idea/spring-cloud.iml" />
       <module fileurl="file://$PROJECT_DIR$/springcloud-server/springcloud.iml" filepath="$PROJECT_DIR$/springcloud-server/springcloud.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springcloud-client/springcloud-client.iml" filepath="$PROJECT_DIR$/springcloud-client/springcloud-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springcloud-customer/springcloud-customer.iml" filepath="$PROJECT_DIR$/springcloud-customer/springcloud-customer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springcloud-server/springcloud-server.iml" filepath="$PROJECT_DIR$/springcloud-server/springcloud-server.iml" />
     </modules>
   </component>
 </project>

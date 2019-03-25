@@ -12,6 +12,9 @@
         <module name="customer" />
         <module name="server" />
         <module name="springcloud" />
+        <module name="springcloud-client" />
+        <module name="springcloud-customer" />
+        <module name="springcloud-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -20,6 +23,9 @@
       <module name="customer" target="1.8" />
       <module name="server" target="1.8" />
       <module name="springcloud" target="1.8" />
+      <module name="springcloud-client" target="1.8" />
+      <module name="springcloud-customer" target="1.8" />
+      <module name="springcloud-server" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
