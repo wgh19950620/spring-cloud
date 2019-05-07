@@ -29,4 +29,15 @@ public class User implements Serializable {
     @ApiModelProperty(value = "用户身份")
     private String identity;
 
+    public User() {
+
+    }
+
+    public User(Integer id, String name, Integer age, String identity) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.identity = identity;
+    }
+
 }
