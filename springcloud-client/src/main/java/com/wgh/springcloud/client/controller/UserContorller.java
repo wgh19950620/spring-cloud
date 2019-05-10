@@ -82,30 +82,30 @@ public class UserContorller {
     @ApiImplicitParam(name = "id", value = "user id", required = true, dataType = "int", paramType = "path")
     @PostMapping("/query/user/{id}")
     public User queryUserById(@PathVariable("id") Integer id) {
-        String key = RedisKeyPrefix.USER + id;
+        /*String key = RedisKeyPrefix.USER + id;
         // 判断缓存是否存在
         if (redisTemplate.hasKey(key)) {
             User user = redisTemplate.opsForValue().get(key);
             logger.info("从缓存中获取了用户!");
             return user;
-        }
+        }*/
         // 从数据库获取，并存入缓存
         User user = userService.queryUserById(id);
         // 放入缓存，并设置缓存时间 set(Object key, Object value, Integer time, TimeUnit.SECONDS);
-        redisTemplate.opsForValue().set(key, user);
+        //        redisTemplate.opsForValue().set(key, user);
         return user;
     }
 
     @ApiOperation(value = "delete user for redis", notes = "delete user for redis")
     @ApiImplicitParam(name = "id", value = "user id", required = true, dataType = "int", paramType = "path")
     @PostMapping("/delete/user/{id}")
-    public void deleteUserById(@PathVariable("id")Integer id){
+    public void deleteUserById(@PathVariable("id") Integer id) {
         logger.info("删除用户loading...");
         String key = RedisKeyPrefix.USER + id;
         int num = userService.deleteUserById(id);
-        if(num == 1) {
+        if (num == 1) {
             // 缓存存在，删除缓存
-            if(redisTemplate.hasKey(key)) {
+            if (redisTemplate.hasKey(key)) {
                 redisTemplate.delete(key);
                 logger.info("删除用户时候，从缓存中删除用户 >> " + id);
             }
@@ -117,12 +117,14 @@ public class UserContorller {
     public void insertUser(@RequestBody User user) {
         logger.info("添加用户信息loading...");
         userService.saveUser(user);
-        User existUser = userService.findUserByBean(user);
+
+        /*User existUser = userService.findUserByBean(user);
         String key = RedisKeyPrefix.USER + existUser.getId();
+
         if(!redisTemplate.hasKey(key)) {
             redisTemplate.opsForValue().set(key, existUser);
             logger.info("将新保存的用户存入缓存中!");
-        }
+        }*/
     }
 
 }

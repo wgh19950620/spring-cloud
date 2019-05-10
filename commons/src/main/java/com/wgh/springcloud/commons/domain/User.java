@@ -29,6 +29,9 @@ public class User implements Serializable {
     @ApiModelProperty(value = "用户身份")
     private String identity;
 
+    @ApiModelProperty(value = "用户大小")
+    private String cupSize;
+
     public User() {
 
     }
@@ -38,6 +41,14 @@ public class User implements Serializable {
         this.name = name;
         this.age = age;
         this.identity = identity;
+    }
+
+    public User(Integer id, String name, Integer age, String identity, String cupSize) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.identity = identity;
+        this.cupSize = cupSize;
     }
 
 }

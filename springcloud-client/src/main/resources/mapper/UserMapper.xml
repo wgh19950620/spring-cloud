@@ -40,13 +40,15 @@
         (
             NAME,
             AGE,
-            IDENTITY
+            IDENTITY,
+            CUPSIZE
         )
         VALUES
         (
             #{name},
             #{age},
-            #{identity}
+            #{identity},
+            #{cupSize}
         );
     </insert>
 
