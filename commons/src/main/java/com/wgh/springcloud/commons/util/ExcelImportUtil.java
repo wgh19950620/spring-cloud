@@ -1,5 +1,14 @@
 package com.wgh.springcloud.commons.util;
 
+import com.github.pagehelper.util.StringUtil;
+import com.wgh.springcloud.commons.domain.ExcelData;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -12,14 +21,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.github.pagehelper.util.StringUtil;
-
 /**
  * excel upload util
  *
@@ -27,21 +28,20 @@ import com.github.pagehelper.util.StringUtil;
  */
 public class ExcelImportUtil {
 
-    private static final Log    log       = LogFactory.getLog(ExcelImportUtil.class);
+    private static final Log log = LogFactory.getLog(ExcelImportUtil.class);
+
     private final static String HSSF_FLAG = "HSSF";
+
     private final static String XSSF_FLAG = "XSSF";
 
     /**
-     * excel文件导入
-     * 该方法在传统方法加以修改，支持不同版本导入，最终返回一个list集合，集合中封装的是object数组，然后根据业务需要封装自己想要的pojo对象。
-     * 该方法支持指定服务端文件路径上传和客户端上传，如果是服务端指定路径上传则file赋值null，反之，则filePaht赋值null
-     * 前端页面代码以下4行
+     * excel文件导入 该方法在传统方法加以修改，支持不同版本导入，最终返回一个list集合，集合中封装的是object数组，然后根据业务需要封装自己想要的pojo对象。
+     * 该方法支持指定服务端文件路径上传和客户端上传，如果是服务端指定路径上传则file赋值null，反之，则filePaht赋值null 前端页面代码以下4行
      * <form action="upload" enctype="multipart/form-data">
      * <input type="file" name="myFile" />
      * <input type="submit" value="Upload! " />
      * </form>
-     * springMvc action 中使用以下代码，以下两行
-     * MultipartHttpServletRequest mulRequest = (MultipartHttpServletRequest) request;
+     * springMvc action 中使用以下代码，以下两行 MultipartHttpServletRequest mulRequest = (MultipartHttpServletRequest) request;
      * MultipartFile file = mulRequest.getFile("excel");
      *
      * @param file
@@ -122,5 +122,37 @@ public class ExcelImportUtil {
             e.printStackTrace();
         }
         return list;
+    }
+
+    /**
+     * 导出两页 2007 Excel
+     *
+     * @param response        HttpServletResponse
+     * @param fileName        文件名称
+     * @param firstExcelData  第一页模板数据
+     * @param secondExcelData 第二页模板数据
+     * @return 文件流
+     */
+    public static OutputStream exportTwo2007Excel(HttpServletResponse response, String fileName,
+                    ExcelData firstExcelData, ExcelData secondExcelData) throws Exception {
+        XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
+        Export2007ExcelUtils.exportExcel(response, fileName, firstExcelData, xssfWorkbook);
+        Export2007ExcelUtils.exportExcel(response, fileName, secondExcelData, xssfWorkbook);
+        OutputStream out = response.getOutputStream();
+        xssfWorkbook.write(out);
+        out.close();
+        xssfWorkbook.close();
+        return out;
+    }
+
+    public static OutputStream export2007Excel(HttpServletResponse response, String fileName,
+                    ExcelData firstExcelData) throws Exception {
+        XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
+        Export2007ExcelUtils.exportExcel(response, fileName, firstExcelData, xssfWorkbook);
+        OutputStream out = response.getOutputStream();
+        xssfWorkbook.write(out);
+        out.close();
+        xssfWorkbook.close();
+        return out;
     }
 }

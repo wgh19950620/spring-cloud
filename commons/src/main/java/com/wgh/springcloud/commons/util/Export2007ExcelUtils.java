@@ -28,8 +28,10 @@ import com.wgh.springcloud.commons.domain.ExcelData;
  */
 public class Export2007ExcelUtils {
 
-    private final static String INK_FONT     = "微软雅黑";
-    private final static String ARIAL_FONT   = "Arial";
+    private final static String INK_FONT = "微软雅黑";
+
+    private final static String ARIAL_FONT = "Arial";
+
     private final static String DEFAULT_NAME = "Sheet1";
 
     /**
@@ -40,7 +42,8 @@ public class Export2007ExcelUtils {
      * @param excelData 表格实体类
      * @throws Exception 抛出错误信息
      */
-    public static void exportExcel(HttpServletResponse response, String fileName, ExcelData excelData) throws Exception {
+    public static void exportExcel(HttpServletResponse response, String fileName, ExcelData excelData)
+                    throws Exception {
 
         // 告诉浏览器用什么软件可以打开此文件
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -237,4 +240,46 @@ public class Export2007ExcelUtils {
         style.setBorderColor(BorderSide.RIGHT, color);
         style.setBorderColor(BorderSide.BOTTOM, color);
     }
+
+    /**
+     * 设置响应头信息
+     *
+     * @param response  HttpServletResponse
+     * @param fileName  文件默认名称
+     * @param excelData 表格实体类
+     * @throws Exception 抛出错误信息
+     */
+    public static void exportExcel(HttpServletResponse response, String fileName, ExcelData excelData,
+                    XSSFWorkbook xssfWorkbook) throws Exception {
+
+        // 告诉浏览器用什么软件可以打开此文件
+        response.setHeader("content-Type", "application/vnd.ms-excel");
+        // 下载文件的默认名称
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+        exportExcel(excelData, xssfWorkbook);
+    }
+
+    /**
+     * 设置 XSSFWorkbook 即xlxs结尾的excel表格
+     *
+     * @param excelData 表格实体类
+     * @throws Exception 抛出错误信息
+     */
+    public static void exportExcel(ExcelData excelData, XSSFWorkbook xssfWorkbook) {
+
+        if (xssfWorkbook == null) {
+            xssfWorkbook = new XSSFWorkbook();
+        }
+
+        String sheetName = excelData.getName();
+
+        if (null == sheetName) {
+            sheetName = DEFAULT_NAME;
+        }
+
+        XSSFSheet xssfSheet = xssfWorkbook.createSheet(sheetName);
+        writeExcel(xssfWorkbook, xssfSheet, excelData);
+
+    }
+
 }
