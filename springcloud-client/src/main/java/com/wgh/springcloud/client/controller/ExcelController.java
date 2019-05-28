@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -196,6 +197,104 @@ public class ExcelController {
         return response;
     }
 
+    @PostMapping("/upload/vm/excel")
+    @ResponseBody
+    public CheckoutVirtualMachineResponse uploadVmExcel(@RequestParam("file") MultipartFile file) throws Exception {
+        CheckoutVirtualMachineResponse response = new CheckoutVirtualMachineResponse();
+        List<CtYunVmAndLocalVmDifferences> ctYunVmAndLocalVmDifferences = new ArrayList<>();
+        Set<String> bizIds = new HashSet<>();
+
+        Workbook workbook = null;
+        Sheet sheet = null;
+
+        String fileName = file.getOriginalFilename();
+
+        if (fileName.isEmpty() || file.getSize() == 0) {
+
+            response.saveError("上传失败");
+            return response;
+        }
+
+        try {
+            if (IsExcelVersion.isExcel2007(fileName)) {
+
+                workbook = new XSSFWorkbook(file.getInputStream());
+            } else if (IsExcelVersion.isExcel2003(fileName)) {
+
+                workbook = new HSSFWorkbook(file.getInputStream());
+            }
+
+            if (null != workbook) {
+                sheet = workbook.getSheetAt(0);
+            }
+
+            if (null == sheet) {
+                response.saveError("Excel 表为空");
+                return response;
+            }
+
+            System.out.println(sheet.getLastRowNum());
+
+            for (int i = 1; i < sheet.getLastRowNum() + 1; i++) {
+                List<VirtualMachineDetailResponse> localVmDetails = new ArrayList<>();
+                VirtualMachineDetailResponse localVmDetail = new VirtualMachineDetailResponse();
+                CtYunVmAndLocalVmDifferences ctYunVmAndLocalVmDifference = new CtYunVmAndLocalVmDifferences();
+
+                Row row = sheet.getRow(i);
+
+                if (null == row) {
+                    response.saveError("Excel 无数据");
+                    return response;
+                }
+
+                ctYunVmAndLocalVmDifference.setBizId(row.getCell(2).getStringCellValue());
+                ctYunVmAndLocalVmDifference.setRegion(row.getCell(3).getStringCellValue());
+
+                localVmDetail.setExternalId(row.getCell(0).getStringCellValue());
+                bizIds.add(row.getCell(2).getStringCellValue());
+                localVmDetail.setName("");
+                localVmDetail.setRegion(row.getCell(3).getStringCellValue());
+                localVmDetail.setAvailabilityZone(row.getCell(4).getStringCellValue());
+                localVmDetail.setCpu(String.valueOf(row.getCell(5).getNumericCellValue()));
+                localVmDetail.setMemory(String.valueOf(row.getCell(6).getNumericCellValue()));
+                localVmDetail.setOsType(row.getCell(7).getStringCellValue());
+                localVmDetail.setPowerState(row.getCell(8).getStringCellValue());
+
+                localVmDetails.add(localVmDetail);
+                ctYunVmAndLocalVmDifference.setLocalVmDetails(localVmDetails);
+                ctYunVmAndLocalVmDifference.setCtYunVmDetails(new ArrayList<>());
+
+                ctYunVmAndLocalVmDifferences.add(ctYunVmAndLocalVmDifference);
+            }
+
+            response.setInvalidBizIds(bizIds);
+            response.setCtYunVmAndLocalVmDifferences(ctYunVmAndLocalVmDifferences);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    @PostMapping("/check/bizIds")
+    @ResponseBody
+    public CheckoutVirtualMachineResponse checkBizIds(@RequestBody CheckoutVirtualMachineResponse response) {
+
+        Set<String> failBizIds = response.getFailBizIds();
+        Set<String> invalidBizIds = response.getInvalidBizIds();
+        Set<String> bizIds = new HashSet<>();
+
+        failBizIds.forEach(failBizId -> {
+            if (!invalidBizIds.contains(failBizId)) {
+                bizIds.add(failBizId);
+            }
+        });
+        response.setInvalidBizIds(bizIds);
+
+        return response;
+    }
+
     /**
      * 导出Excel
      *
@@ -206,12 +305,92 @@ public class ExcelController {
     public OutputStream uploadVmExcel(@RequestBody CheckoutVirtualMachineResponse condition,
                     HttpServletResponse response) throws Exception {
 
-        ExcelData firstExcelData = getDifferenceVms(condition.getCtYunVmAndLocalVmDifferences());
+        ExcelData firstExcelData = getDifferenceVmList(condition.getCtYunVmAndLocalVmDifferences());
         //        ExcelData secondExcelData = getBizIds(condition.getFailBizIds(), condition.getInvalidBizIds());
         String fileName = "天翼云主机与本地主机差异性.xlsx";
 
         return ExcelImportUtil.export2007Excel(response, fileName, firstExcelData);
 
+    }
+
+    private ExcelData getDifferenceVmList(List<CtYunVmAndLocalVmDifferences> differences) {
+        ExcelData excelData = new ExcelData();
+        AtomicInteger count = new AtomicInteger();
+        String sheet = "差异性数据";
+        List<String> titles =
+                        Arrays.asList("bizId", "资源池", "天翼云主机", "天翼云主机", "天翼云主机", "天翼云主机", "本地主机", "本地主机", "本地主机", "本地主机");
+        List<List<Object>> rows = new ArrayList<>();
+        List<Object> rowCell = new ArrayList<>();
+        rowCell.add("");
+        rowCell.add("");
+        rowCell.add("真实ID");
+        rowCell.add("资源池ID");
+        rowCell.add("CPU");
+        rowCell.add("内存");
+        rowCell.add("真实ID");
+        rowCell.add("资源池ID");
+        rowCell.add("CPU");
+        rowCell.add("内存");
+
+        rows.add(rowCell);
+
+        logger.info("差异性数据共：" + differences.size() + "条");
+        differences.forEach(difference -> {
+
+            count.addAndGet(1);
+            logger.info("处理第：" + count + "条数据");
+            if (count.get() == 126) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            int size = difference.getCtYunVmDetails().size() <= difference.getLocalVmDetails().size() ? difference.getLocalVmDetails().size() :
+                            difference.getCtYunVmDetails().size();
+            if (size != 0) {
+                for (int i = 0; i < size; i++) {
+                    List<Object> row = new ArrayList<>();
+                    row.add(difference.getBizId());
+                    row.add(difference.getRegion());
+
+                    if (difference.getCtYunVmDetails().size() > i) {
+                        CtYunVirtualMachineVerifyDifference ctYunVms = difference.getCtYunVmDetails().get(i);
+                        row.add(ctYunVms.getResVmId());
+                        row.add(ctYunVms.getRegionId());
+                        row.add(ctYunVms.getCpuNum());
+                        row.add(ctYunVms.getMemSize());
+                    } else {
+                        row.add("");
+                        row.add("");
+                        row.add("");
+                        row.add("");
+                    }
+
+                    if (difference.getLocalVmDetails().size() > i) {
+                        VirtualMachineDetailResponse localMvs = difference.getLocalVmDetails().get(i);
+                        row.add(localMvs.getExternalId());
+                        row.add(localMvs.getRegion());
+                        row.add(localMvs.getCpu());
+                        row.add(localMvs.getMemory());
+                    } else {
+                        row.add("");
+                        row.add("");
+                        row.add("");
+                        row.add("");
+                    }
+
+                    rows.add(row);
+                }
+            }
+
+        });
+
+        excelData.setName(sheet);
+        excelData.setTitles(titles);
+        excelData.setRows(rows);
+        return excelData;
     }
 
     private ExcelData getDifferenceVms(List<CtYunVmAndLocalVmDifferences> differences) {
@@ -262,11 +441,9 @@ public class ExcelController {
                 }
             }
 
-            if (difference.getCtYunVmDetails().size() != 0 && difference.getCtYunVmDetails().size() != 0) {
-
-                int size = difference.getCtYunVmDetails().size() <= difference.getLocalVmDetails().size() ?
-                                difference.getLocalVmDetails().size() :
-                                difference.getCtYunVmDetails().size();
+            int size = difference.getCtYunVmDetails().size() <= difference.getLocalVmDetails().size() ? difference.getLocalVmDetails().size() :
+                            difference.getCtYunVmDetails().size();
+            if (size != 0) {
                 for (int i = 0; i < size; i++) {
                     List<Object> row = new ArrayList<>();
                     row.add(difference.getBizId());
@@ -287,7 +464,6 @@ public class ExcelController {
                         row.add(ctYunVms.getMemSize());
                         row.add(ctYunVms.getIsFreeze());
                     } else {
-                        row.add("");
                         row.add("");
                         row.add("");
                         row.add("");
@@ -323,11 +499,10 @@ public class ExcelController {
                         row.add("");
                     }
 
-
                     rows.add(row);
                 }
-
             }
+
         });
 
         excelData.setName(sheet);

@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CheckoutVirtualMachineResponse {
+public class CheckoutVirtualMachineResponse extends ResourceResponse {
 
     /**
      * 校验出错数据
